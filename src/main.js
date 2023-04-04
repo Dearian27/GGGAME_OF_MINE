@@ -1,6 +1,6 @@
 import Plane from './scripts/classes/Plane.mjs';
 import Trace from './scripts/classes/Trace.mjs';
-var canvas = document.getElementById('canvas');
+export const canvas = document.getElementById('canvas');
 canvas.width = 1360;
 canvas.height = 680;
 const c = canvas.getContext('2d');
@@ -9,6 +9,38 @@ export const plane1 = new Plane({x: 650, y: 400, width: 45, height: 50});
 console.log(plane1);
 
 const traces = [];
+
+
+
+export const rightBtn = {
+  x: 240,
+  y: 500,
+  width: 100,
+  height: 100,
+};
+
+export const leftBtn = {
+  x: 100,
+  y: 500,
+  width: 100,
+  height: 100,
+};
+
+function btn(rect, text) {
+  c.beginPath();
+  c.rect(rect.x, rect.y, rect.width, rect.height);
+  c.fillStyle = 'rgba(225,225,225,0.5)';
+  c.fill();
+  c.lineWidth = 2;
+  c.strokeStyle = '#000000';
+  c.stroke();
+  c.closePath();
+  c.font = '40pt Kremlin Pro Web';
+  c.fillStyle = '#000000';
+  c.fillText(text, rect.x + rect.width / 4, rect.y + 64);
+}
+
+
 
 const animate = () => {
   requestAnimationFrame(animate);
@@ -27,6 +59,8 @@ const animate = () => {
   // c.fillStyle = 'blue';
   // c.fillRect(plane1.position.x - 10, plane1.position.y - 10, 20, 20);
   
+  btn(rightBtn, ">");
+  btn(leftBtn, "<");
 }
 animate();
 

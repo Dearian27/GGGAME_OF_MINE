@@ -1,4 +1,6 @@
 import {plane1} from './main.js'
+import {canvas} from './main.js'
+import {leftBtn, rightBtn} from './main.js'
 
 window.addEventListener('keypress', (event) => {
   switch(event.code) {
@@ -19,3 +21,29 @@ window.addEventListener('keyup', (event) => {
     plane1.rotation.rotationSpeed = 0;
   }
 })
+
+
+function getMousePos(canvas, event) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top,
+  };
+}
+function isInside(pos, rect) {
+  return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.height && pos.y > rect.y
+}
+
+canvas.addEventListener('click', function(evt) {
+  var mousePos = getMousePos(canvas, evt);
+
+  if (isInside(mousePos, leftBtn)) {
+    console.log('inside leftbtn');
+    plane1.rotation.rotationSpeed = -4;
+  }
+  if(isInside(mousePos, rightBtn)) {
+    plane1.rotation.rotationSpeed = 4;
+  }
+}, false);
+
+
