@@ -10,7 +10,6 @@ class Plane {
       // y: 0
     }
     this.rotation = {
-      maxRS: 4,
       angle: 0, // current angle of Obj
       rotationSpeed: 0, // rotation speed 
     }
