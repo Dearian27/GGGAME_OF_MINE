@@ -29,8 +29,6 @@ class Plane {
     c.save();
     c.translate(this.position.x, this.position.y);
     c.rotate(this.rotation.angle * Math.PI / 360);
-    // c.fillStyle = 'red';
-    // c.fillRect(0, 0, 200, 200);
     c.fillStyle = 'black';
     c.drawImage(this.sprite, -this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
     // c.fillRect(-this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
@@ -45,7 +43,6 @@ class Plane {
     this.position.x += -this.velocity.y * Math.sin(this.rotation.angle * Math.PI / 360);
     this.position.y += this.velocity.y * Math.cos(this.rotation.angle* Math.PI / 360);
     this.draw(c);
-    // console.log(this.rotation.angle);
   }
 }
 

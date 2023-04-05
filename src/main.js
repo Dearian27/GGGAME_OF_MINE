@@ -1,3 +1,4 @@
+import Missile from './scripts/classes/Missile.mjs';
 import Plane from './scripts/classes/Plane.mjs';
 import Trace from './scripts/classes/Trace.mjs';
 export const canvas = document.getElementById('canvas');
@@ -10,6 +11,7 @@ console.log(plane1);
 
 const traces = [];
 
+const missile1 = new Missile({x: 400, y: 400, width: 30, height: 15});
 
 
 export const rightBtn = {
@@ -41,7 +43,6 @@ function btn(rect, text) {
 }
 
 
-
 const animate = () => {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -58,7 +59,8 @@ const animate = () => {
   plane1.update(c, traces);
   // c.fillStyle = 'blue';
   // c.fillRect(plane1.position.x - 10, plane1.position.y - 10, 20, 20);
-  
+  missile1.draw(c, plane1.position.x, plane1.position.y);  
+
   btn(rightBtn, ">");
   btn(leftBtn, "<");
 }

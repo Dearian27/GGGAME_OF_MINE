@@ -40,9 +40,10 @@ canvas.addEventListener('click', function(evt) {
   if (isInside(mousePos, leftBtn)) {
     console.log('inside leftbtn');
     plane1.rotation.rotationSpeed = -4;
-  }
-  if(isInside(mousePos, rightBtn)) {
+  }else if(isInside(mousePos, rightBtn)) {
     plane1.rotation.rotationSpeed = 4;
+  }else {
+    plane1.rotation.rotationSpeed = 0;
   }
 }, false);
 
