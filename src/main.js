@@ -1,3 +1,4 @@
+import GuidedMissile from './scripts/classes/GuidedMissile.mjs';
 import Missile from './scripts/classes/Missile.mjs';
 import Plane from './scripts/classes/Plane.mjs';
 import Trace from './scripts/classes/Trace.mjs';
@@ -12,7 +13,7 @@ console.log(plane1);
 const traces = [];
 
 const missile1 = new Missile({x: 400, y: 400, width: 30, height: 15});
-
+const gm2 = new GuidedMissile({x: 400, y: 400, width: 30, height: 15, speed: 1, angle: plane1.angle});
 
 export const rightBtn = {
   x: 240,
@@ -59,7 +60,9 @@ const animate = () => {
   plane1.update(c, traces);
   // c.fillStyle = 'blue';
   // c.fillRect(plane1.position.x - 10, plane1.position.y - 10, 20, 20);
-  missile1.draw(c, plane1.position.x, plane1.position.y);  
+  
+  gm2.draw(c, plane1.position.x, plane1.position.y);  
+  // missile1.draw(c, plane1.position.x, plane1.position.y);  
 
   btn(rightBtn, ">");
   btn(leftBtn, "<");
