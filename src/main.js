@@ -4,7 +4,7 @@ import Plane from './scripts/classes/Plane.mjs';
 import Trace from './scripts/classes/Trace.mjs';
 import Wall from './scripts/classes/Wall.mjs';
 export const canvas = document.getElementById('canvas');
-canvas.width = 1360;
+canvas.width = 1336;
 canvas.height = 680;
 export const c = canvas.getContext('2d');
 
