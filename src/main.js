@@ -2,18 +2,33 @@ import GuidedMissile from './scripts/classes/GuidedMissile.mjs';
 import Missile from './scripts/classes/Missile.mjs';
 import Plane from './scripts/classes/Plane.mjs';
 import Trace from './scripts/classes/Trace.mjs';
+import Wall from './scripts/classes/Wall.mjs';
 export const canvas = document.getElementById('canvas');
 canvas.width = 1360;
 canvas.height = 680;
-const c = canvas.getContext('2d');
+export const c = canvas.getContext('2d');
 
-export const plane1 = new Plane({x: 650, y: 400, width: 45, height: 50});
+
+export const params = {
+  showCollision: true,
+  deltaTime: 1,
+  time: 0,
+}
+export const plane1 = new Plane({x: 650, y: 400, width: 50, height: 45});
 console.log(plane1);
 
-const traces = [];
-
-const missile1 = new Missile({x: 400, y: 400, width: 30, height: 15});
-const gm2 = new GuidedMissile({x: 400, y: 400, width: 30, height: 15, speed: 1, angle: plane1.angle});
+export const traces = [];
+export const missiles = [];
+export const smokes = [];
+export const walls = [
+  new Wall({x: 0, y: 0, width: canvas.width, height: 10, color: 'grey'}),
+  new Wall({x: 0, y: canvas.height-10, width: canvas.width, height: 10, color: 'grey'}),
+]
+const m1 = new Missile({x: 400, y: 400, width: 45, height:50});
+missiles.push(
+  new GuidedMissile({x: 400, y: 400, width: 30, height: 15, speed: 5, minSpeed: 1, angle: plane1.angle})
+)
+// const missile1 = new Missile({x: 400, y: 400, width: 30, height: 15});
 
 export const rightBtn = {
   x: 240,
@@ -43,12 +58,85 @@ function btn(rect, text) {
   c.fillText(text, rect.x + rect.width / 4, rect.y + 64);
 }
 
+const circleIntersect = (x1, y1, r1, x2, y2, r2) => {
+  // Calculate the distance between the two circles
+  let squareDistance = (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2);
+
+  // When the distance is smaller or equal to the sum
+  // of the two radius, the circles touch or overlap
+  return squareDistance <= ((r1 + r2) * (r1 + r2))
+}
+
+function circleRectIntersect(cx, cy, cr, rx, ry, rw, rh) {
+  // Визначаємо AABB прямокутника, який охоплює коло
+  const circleDistanceX = Math.abs(cx - rx - rw / 2);
+  const circleDistanceY = Math.abs(cy - ry - rh / 2);
+  const halfRectWidth = rw / 2;
+  const halfRectHeight = rh / 2;
+
+  // Перевіряємо, чи можливий перетин за допомогою AABB
+  if (circleDistanceX > halfRectWidth + cr) {
+    return false;
+  }
+  if (circleDistanceY > halfRectHeight + cr) {
+    return false;
+  }
+
+  // Якщо AABB перетинається з колом, перевіряємо перетин
+  if (circleDistanceX <= halfRectWidth || circleDistanceY <= halfRectHeight) {
+    return true;
+  }
+
+  const cornerDistanceSq =
+    Math.pow(circleDistanceX - halfRectWidth, 2) +
+    Math.pow(circleDistanceY - halfRectHeight, 2);
+
+  // Перевіряємо, чи перетинається коло і прямокутник
+  return cornerDistanceSq <= Math.pow(cr, 2);
+}
+
+const checkCollision = () => {
+  missiles.forEach((missile, index) => {
+    if(missile.type === 'gm') {
+      if (missile.findTarget && circleIntersect(plane1.position.x, plane1.position.y, plane1.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
+        missiles.splice(index, 1);
+      }
+    }
+    else if(circleIntersect(plane1.position.x, plane1.position.y, plane1.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
+      missiles.splice(index, 1);
+    }
+  })
+
+  walls.forEach((wall, indexW) => {
+    missiles.forEach((missile, indexM) => {
+      if(missile.type === 'gm') {
+        if (missile.findTarget && circleRectIntersect(missile.position.x, missile.position.y, missile.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
+          missiles.splice(indexM, 1);
+        }
+      }
+      else if(circleIntersect(wall.position.x, wall.position.y, missile.position.x, missile.position.y)) {
+        missiles.splice(indexM, 1);
+      }
+    })
+  })
+}
+
+const Timer = setInterval(() => {
+  params.time++;
+  if(plane1.cd.currentCd > 0) {
+    plane1.cd.currentCd-=6;
+  }
+}, 1000);
 
 const animate = () => {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
+  c.fillStyle = '#4D4D4D';
+  c.fillRect(0, 0, canvas.width, canvas.height);
+  checkCollision();
+
   const trace = new Trace({centerX: plane1.position.x, centerY: plane1.position.y,
-    colorNumbers: [100, 100, 100], radius: 5})
+    colorNumbers: [100, 100, 100], radius: 4})
     traces.push(trace);
   if(traces.length >= 40) {
     traces.shift();
@@ -56,16 +144,31 @@ const animate = () => {
   traces.forEach(trace => 
     trace.update(c)
   )
+ 
+  smokes.forEach((smoke, index) => { 
+    if(smoke.minSize >= smoke.size) {
+      smokes.splice(index, 1);
+      console.log(smokes)
+    }
+    smoke.update()
+  })
   
-  plane1.update(c, traces);
+  m1.update(c, plane1.position.x, plane1.position.y);
+  plane1.update(c);
   // c.fillStyle = 'blue';
   // c.fillRect(plane1.position.x - 10, plane1.position.y - 10, 20, 20);
   
-  gm2.draw(c, plane1.position.x, plane1.position.y);  
+  missiles.forEach((missile, index) => {
+    missile.draw(plane1.position.x, plane1.position.y, plane1.rotation.angle);  
+  })
   // missile1.draw(c, plane1.position.x, plane1.position.y);  
 
+  walls.forEach(wall => 
+    wall.draw()
+  )
   btn(rightBtn, ">");
   btn(leftBtn, "<");
 }
-animate();
+animate()
+
 

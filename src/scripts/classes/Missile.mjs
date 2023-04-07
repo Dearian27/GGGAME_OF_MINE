@@ -15,6 +15,7 @@ class Missile {
       x: 0,
       y: 0,
     }
+    this.speed = 4;
     this.vector = {
       x: 0,
       y: 0,
@@ -26,6 +27,9 @@ class Missile {
     this.size = {
       width: width,
       height: height
+    }
+    this.collision = {
+      r: (this.size.width + this.size.height) / 4
     }
     this.sprite = sprite;
     this.angle = -45;
@@ -49,21 +53,27 @@ class Missile {
   draw(c, x, y) {
     // this.velocity.y = this.amplitude * Math.sin(this.frequency * this.position.x + this.phase);
     this.velocity.y = this.amplitude * Math.sin(this.angle + this.phase);
-    // this.updateTarget(x, y);
+    this.updateTarget(x, y);
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
     this.angleCalibrate(x, y);
+    // console.log(Math.cos(this.angle * 180 / Math.PI), Math.sin(this.angle * 180 / Math.PI))
+    this.position.x += this.speed * Math.cos(this.angle);
+    this.position.y += this.speed * Math.sin(this.angle);
+    
     c.save();
-    // c.transform(Math.cos(this.angle), Math.sin(this.angle), -Math.sin(this.angle), Math.cos(this.angle), 0, 0);
     c.translate(this.position.x, this.position.y);
-    // c.rotate(this.angle * Math.PI / 360 * 100);
-    c.rotate(this.angle * Math.PI / 360);
-    // c.rotate(this.angle * Math.PI / 360);
+    c.rotate(this.angle);
+    // c.rotate(this.angle *  Math.PI / 180);
     c.drawImage(this.sprite, -this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
+    if(params.showCollision) {
+      c.beginPath();
+      c.fillStyle = '#FFC0CB99';
+      c.arc(0, 0,this.collision.r, 0,  2 * Math.PI)
+      c.fill();
+    }
     c.restore();
-    console.log('angle: ', this.angle);
-    // console.log(this.angle * Math.PI / 360 * 180);
   }
 
   update() {

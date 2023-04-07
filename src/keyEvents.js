@@ -10,6 +10,12 @@ window.addEventListener('keypress', (event) => {
     case "KeyD": {
       plane1.rotation.rotationSpeed = 4;
     }break;
+    case "KeyE": {
+      if(plane1.cd.currentCd === 0) {
+        plane1.cd.currentCd = plane1.cd.cd;
+        plane1.shoot();
+      }
+    }break;
   }
 })
 
