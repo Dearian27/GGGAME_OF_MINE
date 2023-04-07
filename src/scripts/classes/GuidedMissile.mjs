@@ -88,7 +88,6 @@ class GuidedMissile {
       if(smokes.length >= 40) {
         smokes.shift();
       }
-      console.log(smokes)
     }
     else this.smoking.currentFrame++;
   }

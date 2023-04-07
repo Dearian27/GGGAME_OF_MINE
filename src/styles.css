@@ -9,6 +9,8 @@ body {
   justify-content: center;
 }
 #canvas {
-  height: 680px;
-  width: 1360px;
+  /* height: 625px; */
+  /* width: 1366px; */
+  height: 100vh;
+  width: 100%;
 }

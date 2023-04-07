@@ -1,11 +1,12 @@
+import BurstParticle from './scripts/classes/BurstParticle.mjs';
 import GuidedMissile from './scripts/classes/GuidedMissile.mjs';
 import Missile from './scripts/classes/Missile.mjs';
 import Plane from './scripts/classes/Plane.mjs';
 import Trace from './scripts/classes/Trace.mjs';
 import Wall from './scripts/classes/Wall.mjs';
 export const canvas = document.getElementById('canvas');
-canvas.width = 1336;
-canvas.height = 680;
+canvas.width = 1603; // 1336 * 1.2
+canvas.height = 750; // 625 * 1.2
 export const c = canvas.getContext('2d');
 
 
@@ -20,6 +21,8 @@ console.log(plane1);
 export const traces = [];
 export const missiles = [];
 export const smokes = [];
+export const bursts = [];
+
 export const walls = [
   new Wall({x: 0, y: 0, width: canvas.width, height: 10, color: 'grey'}),
   new Wall({x: 0, y: canvas.height-10, width: canvas.width, height: 10, color: 'grey'}),
@@ -100,6 +103,12 @@ const checkCollision = () => {
     if(missile.type === 'gm') {
       if (missile.findTarget && circleIntersect(plane1.position.x, plane1.position.y, plane1.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
         missiles.splice(index, 1);
+        let burst = [];
+        for(let i = 0; i < 200; i++) {
+          burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
+          centerY: missile.position.y + missile.size.height/2, radius: 4}));
+        }
+        bursts.push(burst);
       }
     }
     else if(circleIntersect(plane1.position.x, plane1.position.y, plane1.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
@@ -112,6 +121,12 @@ const checkCollision = () => {
       if(missile.type === 'gm') {
         if (missile.findTarget && circleRectIntersect(missile.position.x, missile.position.y, missile.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
           missiles.splice(indexM, 1);
+          let burst = [];
+          for(let i = 0; i < 200; i++) {
+            burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
+            centerY: missile.position.y + missile.size.height/2, radius: 4}));
+          }
+          bursts.push(burst);
         }
       }
       else if(circleIntersect(wall.position.x, wall.position.y, missile.position.x, missile.position.y)) {
@@ -128,12 +143,21 @@ const Timer = setInterval(() => {
   }
 }, 1000);
 
+
+
+// const b1 = new BurstParticle({centerX: 300, centerY: 300, radius: 4});
+// const b2 = new BurstParticle({centerX: 300, centerY: 300, radius: 4});
+// const b2 = new BurstParticle({x: 300, y: 300, radius: 4});
+
 const animate = () => {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
   c.fillStyle = '#4D4D4D';
   c.fillRect(0, 0, canvas.width, canvas.height);
   checkCollision();
+  
+  // b1.update();
+  // b2.update();
 
   const trace = new Trace({centerX: plane1.position.x, centerY: plane1.position.y,
     colorNumbers: [100, 100, 100], radius: 4})
@@ -144,6 +168,12 @@ const animate = () => {
   traces.forEach(trace => 
     trace.update(c)
   )
+  bursts.forEach(burst => {
+    burst.forEach((particle, index2) => {
+      if(particle.speed <= 0.2) burst.splice(index2, 1);
+      else particle.update();
+    })
+  });
  
   smokes.forEach((smoke, index) => { 
     if(smoke.minSize >= smoke.size) {
