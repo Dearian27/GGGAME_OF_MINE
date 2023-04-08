@@ -1,5 +1,5 @@
 // import missileImg from '/src/assets/missile.png';
-import { params, smokes } from '../../main';
+import { params, players, smokes } from '../../main';
 import Smoke from './Smoke.mjs';
 import missileImg from '/src/assets/m2.png';
 import {c} from '../../main.js';
@@ -9,14 +9,10 @@ sprite.src = missileImg;
 
 
 class GuidedMissile {
-  constructor({x, y, width, height, angle, speed, minSpeed}) {
+  constructor({x, y, width, height, angle, speed, minSpeed, ownerId}) {
     this.position = {
       x: x,
       y: y,
-    }
-    this.target = {
-      x: 0,
-      y: 0,
     }
     this.vector = {
       x: 0,
@@ -41,16 +37,19 @@ class GuidedMissile {
       currentFrame: 0,
       smoke: 10,
     }
+    this.target = players.find(player => player.id !== ownerId);
+    console.log(this.target)
   }
-  updateVector(x, y) {
-    this.vector.x = (x - this.position.x);
-    this.vector.y = (y - this.position.y);
-    
-    
-    // if(this.angle > 360) this.angle -= 720; // clearing unnecessary content
-    // if(this.angle < -720) this.angle += 720; // clearing unnecessary content
+  updateVector() {
+    if(this.target) {
+      this.vector.x = (this.target.position.x - this.position.x);
+      this.vector.y = (this.target.position.y - this.position.y);
+    } else {
+      this.vector.y = -this.position.y;
+      this.vector.x = -this.position.x;
+    }
   }
-  angleCalibrate(x, y, angle) {    
+  angleCalibrate() {    
     if(this.findTarget && this.speed >= (this.minSpeed * 3)) { // wait for calibrate target
       // arccos((A·B) / (||A|| ||B||))
       const targetAngle = Math.atan2(this.vector.y, this.vector.x);
@@ -92,11 +91,11 @@ class GuidedMissile {
     else this.smoking.currentFrame++;
   }
   
-  draw(x, y, angle) {
+  draw() {
     this.smoke();
     this.speedUp();
-    this.updateVector(x, y);
-    this.angleCalibrate(x, y, angle);
+    this.updateVector();
+    this.angleCalibrate();
     // console.log(Math.cos(this.angle * 180 / Math.PI), Math.sin(this.angle * 180 / Math.PI))
     this.position.x += this.speed * Math.cos(this.angle);
     this.position.y += this.speed * Math.sin(this.angle);

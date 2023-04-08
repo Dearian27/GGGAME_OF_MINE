@@ -19,6 +19,7 @@ class BurstParticle {
     // this.opacity = (this.opacity * 80 - 1) / 80;  // opacity - 0.1;
     if(this.speed > 0.2) {
       this.speed = (this.speed * 40 - 1) / 40; 
+      // this.color++;
     }
     this.position.centerX += this.speed * Math.cos(this.angle);
     this.position.centerY += this.speed * Math.sin(this.angle);// if((this.opacity * 40 - 1) / 40 > 0.1) { this.radius = (this.radius * 40 - 1) / 40; // radius - 0.05;}

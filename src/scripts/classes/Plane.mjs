@@ -1,11 +1,17 @@
-import { missiles, params } from "../../main";
+import { missiles, params, traces } from "../../main";
 import GuidedMissile from "./GuidedMissile.mjs";
+import Trace from "./Trace.mjs";
 
 const planeImg = new Image();
 planeImg.src =  '/src/assets/plane.png'; 
 
 class Plane {
-  constructor({x, y, width, height}) {
+  constructor({x, y, width, height, angle, keys, id}) {
+    this.id = id
+    this.position = {
+      x: x,
+      y: y,
+    }
     this.size = {
       width: width,
       height: height
@@ -18,29 +24,31 @@ class Plane {
       r: (this.size.width + this.size.height) / 4
     }
     this.speed = 4;
-    // this.velocity = {
-    //   x: 0,
-    //   y: -4
-    //   // y: 0
-    // }
     this.sprite = planeImg;
     this.rotation = {
-      angle: -90 * Math.PI / 180, // current angle of Obj
+      angle: angle * Math.PI / 180, // current angle of Obj
       rotationSpeed: 0, // rotation speed 
     }
-    this.position = {
-      x: x,
-      y: y,
-    }
+    this.keys = keys;
   }
   shoot() {
-    console.log("shoot", this.rotation.angle * 180 / Math.PI);
+    // console.log("shoot", this.rotation.angle * 180 / Math.PI);
     missiles.push( new GuidedMissile({
       x: this.position.x, y: this.position.y,
       width: 30, height: 15,
       speed: 4, minSpeed: 1,
-      angle: this.rotation.angle
+      angle: this.rotation.angle,
+      ownerId: this.id
     }))
+  }
+  tracing() {
+    traces.push(
+      new Trace({centerX: this.position.x, centerY: this.position.y,
+      colorNumbers: [100, 100, 100], radius: 4})
+    );
+    if(traces.length >= 80) {
+      traces.shift();
+    }
   }
   draw(c) {
     c.save();
@@ -69,6 +77,7 @@ class Plane {
     // this.position.y += this.velocity.y * Math.cos(this.rotation.angle* Math.PI / 360);
     this.position.y += this.speed * Math.sin(this.rotation.angle);
     this.draw(c);
+    this.tracing();
   }
 }
 
