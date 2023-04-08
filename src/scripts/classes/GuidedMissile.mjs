@@ -22,7 +22,6 @@ class GuidedMissile {
     this.speed = speed;
     this.startSpeed = speed;
     this.minSpeed = minSpeed;
-    this.findTarget = false;
     this.size = {
       width: width,
       height: height
@@ -37,8 +36,9 @@ class GuidedMissile {
       currentFrame: 0,
       smoke: 10,
     }
+    this.ownerId = ownerId;
     this.target = players.find(player => player.id !== ownerId);
-    console.log(this.target)
+    this.ownerPhysics = false;
   }
   updateVector() {
     if(this.target) {
@@ -50,7 +50,7 @@ class GuidedMissile {
     }
   }
   angleCalibrate() {    
-    if(this.findTarget && this.speed >= (this.minSpeed * 3)) { // wait for calibrate target
+    if(this.ownerPhysics && this.speed >= (this.minSpeed * 3)) { // wait for calibrate target
       // arccos((A·B) / (||A|| ||B||))
       const targetAngle = Math.atan2(this.vector.y, this.vector.x);
       let angleDiff = targetAngle - this.angle;
@@ -67,11 +67,11 @@ class GuidedMissile {
     }
   }
   speedUp() {
-    if(!this.findTarget) {
+    if(!this.ownerPhysics) {
       // slow at start
       this.speed = (this.speed * 20 - 2) / 20;
       if(this.speed <= this.minSpeed) {
-        this.findTarget = true;
+        this.ownerPhysics = true;
       }
     }else {
       if( this.speed < 5) {

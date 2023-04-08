@@ -1,4 +1,5 @@
 import { missiles, params, traces } from "../../main";
+import DefaultMissile from "./DefaultMissile.mjs";
 import GuidedMissile from "./GuidedMissile.mjs";
 import Trace from "./Trace.mjs";
 
@@ -33,13 +34,15 @@ class Plane {
   }
   shoot() {
     // console.log("shoot", this.rotation.angle * 180 / Math.PI);
-    missiles.push( new GuidedMissile({
-      x: this.position.x, y: this.position.y,
-      width: 30, height: 15,
-      speed: 4, minSpeed: 1,
-      angle: this.rotation.angle,
-      ownerId: this.id
-    }))
+    missiles.push( 
+      // new GuidedMissile({
+      // x: this.position.x, y: this.position.y, width: 30, height: 15,
+      // speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
+      // })
+      new DefaultMissile({x: this.position.x, y:this.position.y, width: 30, height: 15,
+        angle: this.rotation.angle, speed: 3, ownerId: this.id}
+      )
+    )
   }
   tracing() {
     traces.push(

@@ -103,27 +103,26 @@ function circleRectIntersect(cx, cy, cr, rx, ry, rw, rh) {
 }
 
 const checkCollision = () => {
-  missiles.forEach((missile, index) => {
-    if(missile.type === 'gm' && missile?.findTarget || missile.type !== 'gm') {
-      players.forEach((player) => {
-        if (circleIntersect(player.position.x, player.position.y, player.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
-          missiles.splice(index, 1);
-          let burst = [];
-          let particleCount = params.graphic === "high" ? 500 : params.graphic === "low" && 200;
-          for(let i = 0; i < particleCount; i++) {
-            burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
-            centerY: missile.position.y + missile.size.height/2, radius: 4}));
+  missiles.forEach((missile, index) => { //! missile with Player
+    players.forEach((player) => {
+        if(missile.ownerPhysics || (!missile.ownerPhysics && missile.ownerId !== player.id) ) {
+          if (circleIntersect(player.position.x, player.position.y, player.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
+            missiles.splice(index, 1);
+            let burst = [];
+            let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
+            for(let i = 0; i < particleCount; i++) {
+              burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
+              centerY: missile.position.y + missile.size.height/2, radius: 4}));
+            }
+            bursts.push(burst);
           }
-          bursts.push(burst);
         }
       })
-    }
   })
 
-  walls.forEach((wall, indexW) => {
+  walls.forEach((wall, indexW) => { //! wall with Player
     missiles.forEach((missile, indexM) => {
-      if(missile.type === 'gm') {
-        if (missile.findTarget && circleRectIntersect(missile.position.x, missile.position.y, missile.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
+        if (circleRectIntersect(missile.position.x, missile.position.y, missile.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
           missiles.splice(indexM, 1);
           let burst = [];
           let particleCount = params.graphic === "high" ? 500 : params.graphic === "low" && 200;
@@ -132,11 +131,8 @@ const checkCollision = () => {
             centerY: missile.position.y + missile.size.height/2, radius: 4}));
           }
           bursts.push(burst);
+          console.log("burst");
         }
-      }
-      else if(circleIntersect(wall.position.x, wall.position.y, missile.position.x, missile.position.y)) {
-        missiles.splice(indexM, 1);
-      }
     })
   })
 }
@@ -146,6 +142,14 @@ const Timer = setInterval(() => {
   players.forEach((player) => {
     if(player.cd.currentCd > 0) {
       player.cd.currentCd-=6;
+    }
+  })
+  missiles.forEach(missile => {
+    if(missile.physicsDelay) {
+      missile.physicsDelay--;
+      if(missile.physicsDelay <= 0) {
+        missile.ownerPhysics = true;
+      }
     }
   })
 }, 1000);
