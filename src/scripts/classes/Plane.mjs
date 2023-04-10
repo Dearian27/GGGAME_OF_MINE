@@ -25,6 +25,7 @@ class Plane {
       r: (this.size.width + this.size.height) / 4
     }
     this.speed = 4;
+    this.defaultSpeed = this.speed;
     this.sprite = planeImg;
     this.rotation = {
       angle: angle * Math.PI / 180, // current angle of Obj
@@ -35,13 +36,13 @@ class Plane {
   shoot() {
     // console.log("shoot", this.rotation.angle * 180 / Math.PI);
     missiles.push( 
-      // new GuidedMissile({
-      // x: this.position.x, y: this.position.y, width: 30, height: 15,
-      // speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
-      // })
-      new DefaultMissile({x: this.position.x, y:this.position.y, width: 30, height: 15,
-        angle: this.rotation.angle, speed: 3, ownerId: this.id}
-      )
+      new GuidedMissile({
+      x: this.position.x, y: this.position.y, width: 30, height: 15,
+      speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
+      })
+      // new DefaultMissile({x: this.position.x, y:this.position.y, width: 30, height: 15,
+      //   angle: this.rotation.angle, speed: 3, ownerId: this.id}
+      // )
     )
   }
   tracing() {

@@ -6,7 +6,7 @@ import Trace from './scripts/classes/Trace.mjs';
 import Wall from './scripts/classes/Wall.mjs';
 export const canvas = document.getElementById('canvas');
 canvas.width = 1603; // 1336 * 1.2
-canvas.height = 750; // 625 * 1.2
+canvas.height = 733; // 612 * 1.2
 export const c = canvas.getContext('2d');
 
 

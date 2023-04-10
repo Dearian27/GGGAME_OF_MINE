@@ -14,6 +14,9 @@ window.addEventListener('keydown', (event) => {
     case "KeyD": {
       player1.rotation.rotationSpeed = 4;
     }break;
+    case "KeyS": {
+      player1.speed = player1.defaultSpeed / 1.5;
+    }break;
     case "KeyE": {
       if(player1.cd.currentCd === 0) {
         player1.cd.currentCd = player1.cd.cd;
@@ -26,6 +29,9 @@ window.addEventListener('keydown', (event) => {
     case "ArrowRight": {
       player2.rotation.rotationSpeed = 4;
     }break;
+    case "ArrowDown": {
+      player2.speed = player2.defaultSpeed / 1.5;
+    }break;
     case "Slash": {
       if(player2.cd.currentCd === 0) {
         player2.cd.currentCd = player1.cd.cd;
@@ -36,7 +42,13 @@ window.addEventListener('keydown', (event) => {
 })
 
 window.addEventListener('keyup', (event) => {
-  if(event.code === 'KeyA' && player1.rotation.rotationSpeed < 0) {
+  if(event.code === 'KeyS') {
+    player1.speed = player1.defaultSpeed;
+  }
+  else if(event.code === 'ArrowDown') {
+    player2.speed = player2.defaultSpeed;
+  }
+  else if(event.code === 'KeyA' && player1.rotation.rotationSpeed < 0) {
     player1.rotation.rotationSpeed = 0;
   } 
   else if(event.code === 'KeyD' && player1.rotation.rotationSpeed > 0) {
