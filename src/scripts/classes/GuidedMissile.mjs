@@ -39,6 +39,7 @@ class GuidedMissile {
     this.ownerId = ownerId;
     this.target = players.find(player => player.id !== ownerId);
     this.ownerPhysics = false;
+    this.frame = 0;
   }
   updateVector() {
     if(this.target) {
