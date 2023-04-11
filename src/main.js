@@ -1,3 +1,4 @@
+import Booster from './scripts/classes/Booster.mjs';
 import BurstParticle from './scripts/classes/BurstParticle.mjs';
 import GuidedMissile from './scripts/classes/GuidedMissile.mjs';
 import Missile from './scripts/classes/Missile.mjs';
@@ -11,7 +12,7 @@ export const c = canvas.getContext('2d');
 
 
 export const params = {
-  showCollision: true,
+  showCollision: false,
   deltaTime: 1,
   time: 0,
   graphic: 'high', // low/high
@@ -22,35 +23,27 @@ export const missiles = [];
 export const smokes = [];
 export const bursts = [];
 export const players = [
-  new Plane({x: 1200, y: 500, width: 50, height: 45, angle: -90, keys: "WASD", id: 1}),
-  new Plane({x: 250, y: 200, width: 50, height: 45, angle: 90, keys: "ARROWS", id: 2})
+  new Plane({x: 1200, y: 500, width: 35, height: 35, angle: -90, keys: "WASD", id: 1}),
+  new Plane({x: 250, y: 200, width: 35, height: 35, angle: 90, keys: "ARROWS", id: 2})
 ];
-
-
 export const walls = [
   new Wall({x: 0, y: 0, width: canvas.width, height: 10, color: 'grey'}),
   new Wall({x: 0, y: canvas.height-10, width: canvas.width, height: 10, color: 'grey'}),
+  new Wall({x: 0, y: 10, width: 10, height: canvas.height - 20, color: 'grey'}),
+  new Wall({x: canvas.width-10, y: 10, width: 10, height: canvas.height-20, color: 'grey'}),
 ]
-// const m1 = new Missile({x: 400, y: 400, width: 45, height:50});
-// missiles.push(
-//   new GuidedMissile({x: 400, y: 400, width: 30, height: 15, speed: 5, minSpeed: 1, angle: plane1.angle})
-// )
-// const missile1 = new Missile({x: 400, y: 400, width: 30, height: 15});
-
 export const rightBtn = {
   x: 240,
   y: 500,
   width: 100,
   height: 100,
 };
-
 export const leftBtn = {
   x: 100,
   y: 500,
   width: 100,
   height: 100,
 };
-
 function btn(rect, text) {
   c.beginPath();
   c.rect(rect.x, rect.y, rect.width, rect.height);
@@ -64,7 +57,6 @@ function btn(rect, text) {
   c.fillStyle = '#000000';
   c.fillText(text, rect.x + rect.width / 4, rect.y + 64);
 }
-
 const circleIntersect = (x1, y1, r1, x2, y2, r2) => {
   // Calculate the distance between the two circles
   let squareDistance = (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2);
@@ -73,7 +65,6 @@ const circleIntersect = (x1, y1, r1, x2, y2, r2) => {
   // of the two radius, the circles touch or overlap
   return squareDistance <= ((r1 + r2) * (r1 + r2))
 }
-
 function circleRectIntersect(cx, cy, cr, rx, ry, rw, rh) {
   // Визначаємо AABB прямокутника, який охоплює коло
   const circleDistanceX = Math.abs(cx - rx - rw / 2);
@@ -101,13 +92,15 @@ function circleRectIntersect(cx, cy, cr, rx, ry, rw, rh) {
   // Перевіряємо, чи перетинається коло і прямокутник
   return cornerDistanceSq <= Math.pow(cr, 2);
 }
-
 const checkCollision = () => {
-  missiles.forEach((missile, index) => { //! missile with Player
-    players.forEach((player) => {
+  missiles.forEach((missile, index1) => { //! missile with Player
+    players.forEach((player, index2) => {
         if(missile.ownerPhysics || (!missile.ownerPhysics && missile.ownerId !== player.id) ) {
           if (circleIntersect(player.position.x, player.position.y, player.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
-            missiles.splice(index, 1);
+            //plane burst
+            players.splice(index2, 1);
+            //missile burst
+            missiles.splice(index1, 1);
             let burst = [];
             let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
             for(let i = 0; i < particleCount; i++) {
@@ -121,11 +114,17 @@ const checkCollision = () => {
   })
 
   walls.forEach((wall, indexW) => { //! wall with Player
+    players.forEach((player, index2) => {
+      if (circleRectIntersect(player.position.x, player.position.y, player.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
+      //plane burst
+      players.splice(index2, 1);
+      }
+    })
     missiles.forEach((missile, indexM) => {
         if (circleRectIntersect(missile.position.x, missile.position.y, missile.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
           missiles.splice(indexM, 1);
           let burst = [];
-          let particleCount = params.graphic === "high" ? 500 : params.graphic === "low" && 200;
+          let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
           for(let i = 0; i < particleCount; i++) {
             burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
             centerY: missile.position.y + missile.size.height/2, radius: 4}));
@@ -146,6 +145,9 @@ const Timer = setInterval(() => {
   })
   missiles.forEach(missile => {
     if(missile.physicsDelay) {
+      if(missile.type === "gm") {
+        missile.frame++;
+      }
       missile.physicsDelay--;
       if(missile.physicsDelay <= 0) {
         missile.ownerPhysics = true;
@@ -154,6 +156,8 @@ const Timer = setInterval(() => {
   })
 }, 1000);
 
+const b = new Booster({x: 800, y: 400, type: 'gm'});
+
 const animate = () => {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -161,6 +165,8 @@ const animate = () => {
   c.fillRect(0, 0, canvas.width, canvas.height);
   checkCollision();
 
+  b.draw();
+  
   traces.forEach(trace => 
     trace.update(c)
   )

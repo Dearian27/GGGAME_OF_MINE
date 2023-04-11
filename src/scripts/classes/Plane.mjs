@@ -4,7 +4,7 @@ import GuidedMissile from "./GuidedMissile.mjs";
 import Trace from "./Trace.mjs";
 
 const planeImg = new Image();
-planeImg.src =  '/src/assets/plane.png'; 
+planeImg.src =  '/src/assets/planeB.png'; 
 
 class Plane {
   constructor({x, y, width, height, angle, keys, id}) {
@@ -37,7 +37,7 @@ class Plane {
     // console.log("shoot", this.rotation.angle * 180 / Math.PI);
     missiles.push( 
       new GuidedMissile({
-      x: this.position.x, y: this.position.y, width: 30, height: 15,
+      x: this.position.x, y: this.position.y, width: 25, height: 40,
       speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
       })
       // new DefaultMissile({x: this.position.x, y:this.position.y, width: 30, height: 15,

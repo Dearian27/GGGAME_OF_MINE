@@ -1,7 +1,7 @@
 // import missileImg from '/src/assets/missile.png';
 import { params, players, smokes } from '../../main';
 import Smoke from './Smoke.mjs';
-import missileImg from '/src/assets/m2.png';
+import missileImg from '/src/assets/missile3.png';
 import {c} from '../../main.js';
 
 const sprite = new Image();
