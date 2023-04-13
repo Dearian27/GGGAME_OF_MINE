@@ -9,10 +9,18 @@ const player2 = players.find(player => player.keys === 'ARROWS')
 window.addEventListener('keydown', (event) => {
   switch(event.code) {
     case "KeyA": {
-      player1.rotation.rotationSpeed = -4;
+      if(player1.defaultSpeed > player1.speed) {
+        player1.rotation.rotationSpeed = -6;
+      } else {
+        player1.rotation.rotationSpeed = -4;
+      }
     } break;
     case "KeyD": {
-      player1.rotation.rotationSpeed = 4;
+      if(player1.defaultSpeed > player1.speed) {
+        player1.rotation.rotationSpeed = 6;
+      } else {
+        player1.rotation.rotationSpeed = 4;
+      }
     }break;
     case "KeyS": {
       player1.speed = player1.defaultSpeed / 1.5;
@@ -25,10 +33,18 @@ window.addEventListener('keydown', (event) => {
       }
     }break;
     case "ArrowLeft": {
-      player2.rotation.rotationSpeed = -4;
+      if(player2.defaultSpeed > player2.speed) {
+        player2.rotation.rotationSpeed = 6;
+      } else {
+        player2.rotation.rotationSpeed = -4;
+      }
     }break;
     case "ArrowRight": {
-      player2.rotation.rotationSpeed = 4;
+      if(player2.defaultSpeed > player2.speed) {
+        player2.rotation.rotationSpeed = 6;
+      } else {
+        player2.rotation.rotationSpeed = 4;
+      }
     }break;
     case "ArrowDown": {
       player2.speed = player2.defaultSpeed / 1.5;

@@ -20,11 +20,10 @@ export const params = {
 
 export const maps = [
   [
-    new Wall({x: canvas.width/2 - 190, y: 10, width: 400, height: 20, color: 'grey'}),
-    new Wall({x: canvas.width/2 - 190, y: canvas.height - 30, width: 400, height: 20, color: 'grey'}),
-    new Wall({x: canvas.width/2 - 120, y: 30, width: 30, height: 200, color: 'grey'}),
-    new Wall({x: canvas.width/2 + 120, y: canvas.height - 230, width: 30, height: 200, color: 'grey'}),
-    // new Wall({x: 0, y: 0, width: canvas.width, height: 10, color: 'grey'}),
+    new Wall({x: canvas.width/2 - 190, y: 10, width: 400, height: 20, color: 'white'}),
+    new Wall({x: canvas.width/2 - 190, y: canvas.height - 30, width: 400, height: 20, color: 'white'}),
+    new Wall({x: canvas.width/2 - 120, y: 30, width: 30, height: 200, color: 'white'}),
+    new Wall({x: canvas.width/2 + 120, y: canvas.height - 230, width: 30, height: 200, color: 'white'}),
   ]
 ]
 export const currentMap = maps[0]
