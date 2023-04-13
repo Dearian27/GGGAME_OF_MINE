@@ -1,6 +1,6 @@
 import {c, smokes} from '../../main.js'
 import Smoke from './Smoke.mjs';
-import missileImg from '/src/assets/m2.png';
+import missileImg from '/assets/m2.png';
 
 const sprite = new Image();
 sprite.src = missileImg;
@@ -33,7 +33,7 @@ class DefaultMissile {
     this.ownerPhysics = false;
     this.smoking = {
       currentFrame: 0,
-      smoke: 10,
+      smoke: 1,
     }
     this.ownerId = ownerId;
   }

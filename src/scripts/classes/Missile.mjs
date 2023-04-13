@@ -1,5 +1,5 @@
 // import missileImg from '/src/assets/missile.png';
-import missileImg from '/src/assets/m2.png';
+import missileImg from '/assets/m2.png';
 
 const sprite = new Image();
 sprite.src = missileImg;

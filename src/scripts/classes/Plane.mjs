@@ -4,10 +4,10 @@ import GuidedMissile from "./GuidedMissile.mjs";
 import Trace from "./Trace.mjs";
 
 const planeImg = new Image();
-planeImg.src =  '/src/assets/planeB.png'; 
+planeImg.src =  '/assets/planeB.png'; 
 
 class Plane {
-  constructor({x, y, width, height, angle, keys, id}) {
+  constructor({x, y, width, height, angle, keys, id, tColor}) {
     this.id = id
     this.position = {
       x: x,
@@ -32,6 +32,8 @@ class Plane {
       rotationSpeed: 0, // rotation speed 
     }
     this.keys = keys;
+    this.tColor = tColor; // [r, g, b]
+    this.traces = [];
   }
   shoot() {
     // console.log("shoot", this.rotation.angle * 180 / Math.PI);
@@ -46,12 +48,12 @@ class Plane {
     )
   }
   tracing() {
-    traces.push(
+    this.traces.push(
       new Trace({centerX: this.position.x, centerY: this.position.y,
-      colorNumbers: [100, 100, 100], radius: 4})
+      colorNumbers: this.tColor, radius: 4})
     );
-    if(traces.length >= 80) {
-      traces.shift();
+    if(this.traces.length >= 40) {
+      this.traces.shift();
     }
   }
   draw(c) {

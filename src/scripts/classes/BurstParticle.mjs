@@ -6,7 +6,7 @@ class BurstParticle {
       centerX: centerX,
       centerY: centerY,
     }
-    this.speed = Math.round(Math.random() * 20)/10;
+    this.speed = Math.floor(Math.random() * 20)/10;
     this.angle = Math.round(Math.random() * 360);
     this.color = Math.round(Math.random() * 20 + 30);
     // this.color = 220;

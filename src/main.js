@@ -33,8 +33,8 @@ export const missiles = [];
 export const smokes = [];
 export const bursts = [];
 export const players = [
-  new Plane({x: 1200, y: 500, width: 35, height: 35, angle: -90, keys: "WASD", id: 1}),
-  new Plane({x: 250, y: 200, width: 35, height: 35, angle: 90, keys: "ARROWS", id: 2})
+  new Plane({x: 1200, y: 500, width: 35, height: 35, angle: -90, keys: "WASD", id: 1, tColor: [121,159,203]}),
+  new Plane({x: 250, y: 200, width: 35, height: 35, angle: 90, keys: "ARROWS", id: 2, tColor: [249,102,94]})
 ];
 export const walls = [
   ...currentMap,
@@ -184,6 +184,7 @@ const animate = () => {
   traces.forEach(trace => 
     trace.update(c)
   )
+
   bursts.forEach((burst, index1) => {
     if(bursts.length === 0) bursts.splice(index1, 1);
     burst.forEach((particle, index2) => {
@@ -191,7 +192,6 @@ const animate = () => {
       else particle.update();
     })
   });
- 
   smokes.forEach((smoke, index) => { 
     if(smoke.minSize >= smoke.size) {
       smokes.splice(index, 1);
@@ -199,22 +199,19 @@ const animate = () => {
     smoke.update()
   })
   
-  players.forEach(player =>
+  players.forEach(player => {
+    player.traces.forEach(trace => trace.update(c))
     player.update(c)
-  )
+  })
   // c.fillStyle = 'blue';
   // c.fillRect(plane1.position.x - 10, plane1.position.y - 10, 20, 20);
   
   missiles.forEach((missile, index) => {
     missile.draw();  
   })
-  // missile1.draw(c, plane1.position.x, plane1.position.y);  
-
   walls.forEach(wall => 
     wall.draw()
   )
-  btn(rightBtn, ">");
-  btn(leftBtn, "<");
 }
 animate()
 

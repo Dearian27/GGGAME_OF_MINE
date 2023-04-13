@@ -1,7 +1,7 @@
 // import smoke1Img from '/src/assets/smoke1.png';
-import smoke1Img from '/src/assets/smoke1.png';
-import smoke2Img from '/src/assets/smoke2.png';
-import smoke3Img from '/src/assets/smoke3.png';
+import smoke1Img from '/assets/smoke1.png';
+import smoke2Img from '/assets/smoke2.png';
+import smoke3Img from '/assets/smoke3.png';
 import {c} from '../../main.js';
 
 
@@ -40,7 +40,8 @@ class Smoke {
     if( this.size <= this.maxSize && !this.isMaxSizes ) {
       this.size = (this.size * 10 + 5) / 10; // size++
     } else if( this.isMaxSizes && this.size >= this.minSize/10) {
-      this.size = (this.size * 10 - 10) / 10; // size--
+      // this.size = (this.size * 10 - 50) / 10; // size--
+      this.size = 0; // size--
     }
     c.save();
     c.translate(this.position.x, this.position.y);
