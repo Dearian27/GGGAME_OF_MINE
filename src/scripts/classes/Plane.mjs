@@ -33,14 +33,12 @@ class Plane {
     }
     this.keys = keys;
     this.tColor = tColor; // [r, g, b]
-    this.traces = [];
   }
   shoot() {
-    // console.log("shoot", this.rotation.angle * 180 / Math.PI);
     missiles.push( 
       new GuidedMissile({
-      x: this.position.x, y: this.position.y, width: 25, height: 40,
-      speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
+        x: this.position.x, y: this.position.y, width: 25, height: 40,
+        speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
       })
       // new DefaultMissile({x: this.position.x, y:this.position.y, width: 30, height: 15,
       //   angle: this.rotation.angle, speed: 3, ownerId: this.id}
@@ -48,19 +46,19 @@ class Plane {
     )
   }
   tracing() {
-    this.traces.push(
+    if(!traces[this.id]) traces[this.id] = [];
+    traces[this.id].push(
       new Trace({centerX: this.position.x, centerY: this.position.y,
       colorNumbers: this.tColor, radius: 4})
     );
-    if(this.traces.length >= 40) {
-      this.traces.shift();
+    if(traces[this.id].length >= 40) {
+      traces[this.id].shift();
     }
   }
   draw(c) {
     c.save();
     c.translate(this.position.x, this.position.y);
     c.rotate(this.rotation.angle);
-    // c.fillStyle = 'black';
     c.drawImage(this.sprite, -this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
     if(params.showCollision) {
       c.beginPath();

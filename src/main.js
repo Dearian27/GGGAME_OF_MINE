@@ -22,8 +22,8 @@ export const maps = [
   [
     new Wall({x: canvas.width/2 - 190, y: 10, width: 400, height: 20, color: 'grey'}),
     new Wall({x: canvas.width/2 - 190, y: canvas.height - 30, width: 400, height: 20, color: 'grey'}),
-    new Wall({x: canvas.width/2 - 120, y: 30, width: 20, height: 200, color: 'grey'}),
-    new Wall({x: canvas.width/2 + 120, y: canvas.height - 230, width: 20, height: 200, color: 'grey'}),
+    new Wall({x: canvas.width/2 - 120, y: 30, width: 30, height: 200, color: 'grey'}),
+    new Wall({x: canvas.width/2 + 120, y: canvas.height - 230, width: 30, height: 200, color: 'grey'}),
     // new Wall({x: 0, y: 0, width: canvas.width, height: 10, color: 'grey'}),
   ]
 ]
@@ -181,8 +181,10 @@ const animate = () => {
   // currentMap.forEach((map) => {
   //   map.draw();
   // })
-  traces.forEach(trace => 
-    trace.update(c)
+  traces.forEach(collection => 
+    collection.forEach(trace => {
+      trace.update(c)
+    })
   )
 
   bursts.forEach((burst, index1) => {
@@ -200,7 +202,6 @@ const animate = () => {
   })
   
   players.forEach(player => {
-    player.traces.forEach(trace => trace.update(c))
     player.update(c)
   })
   // c.fillStyle = 'blue';

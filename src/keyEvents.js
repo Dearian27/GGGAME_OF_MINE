@@ -20,7 +20,8 @@ window.addEventListener('keydown', (event) => {
     case "KeyE": {
       if(player1.cd.currentCd === 0) {
         player1.cd.currentCd = player1.cd.cd;
-        player1.shoot();
+        if(players.find(player => player.keys === 'WASD'))
+          player1.shoot();
       }
     }break;
     case "ArrowLeft": {
@@ -35,7 +36,8 @@ window.addEventListener('keydown', (event) => {
     case "Slash": {
       if(player2.cd.currentCd === 0) {
         player2.cd.currentCd = player1.cd.cd;
-        player2.shoot();
+        if(players.find(player => player.keys === 'ARROWS'))
+          player2.shoot();
       }
     }break;
   }
