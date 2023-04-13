@@ -154,15 +154,16 @@ const Timer = setInterval(() => {
     }
   })
   missiles.forEach(missile => {
-    if(missile.physicsDelay) {
+    // if(missile.physicsDelay) {
       if(missile.type === "gm") {
         missile.frame++;
       }
       missile.physicsDelay--;
-      if(missile.physicsDelay <= 0) {
+      if(missile.physicsDelay <= 0 && !missile.ownerPhysics) {
         missile.ownerPhysics = true;
+        console.log("collided")
       }
-    }
+    // }
   })
 }, 1000);
 

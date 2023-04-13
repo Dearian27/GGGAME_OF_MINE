@@ -10,14 +10,14 @@ window.addEventListener('keydown', (event) => {
   switch(event.code) {
     case "KeyA": {
       if(player1.defaultSpeed > player1.speed) {
-        player1.rotation.rotationSpeed = -6;
+        player1.rotation.rotationSpeed = -5.5;
       } else {
         player1.rotation.rotationSpeed = -4;
       }
     } break;
     case "KeyD": {
       if(player1.defaultSpeed > player1.speed) {
-        player1.rotation.rotationSpeed = 6;
+        player1.rotation.rotationSpeed = 5.5;
       } else {
         player1.rotation.rotationSpeed = 4;
       }
