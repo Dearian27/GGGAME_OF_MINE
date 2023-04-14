@@ -34,14 +34,14 @@ window.addEventListener('keydown', (event) => {
     }break;
     case "ArrowLeft": {
       if(player2.defaultSpeed > player2.speed) {
-        player2.rotation.rotationSpeed = 6;
+        player2.rotation.rotationSpeed = -5.5;
       } else {
         player2.rotation.rotationSpeed = -4;
       }
     }break;
     case "ArrowRight": {
       if(player2.defaultSpeed > player2.speed) {
-        player2.rotation.rotationSpeed = 6;
+        player2.rotation.rotationSpeed = 5.5;
       } else {
         player2.rotation.rotationSpeed = 4;
       }
