@@ -99,14 +99,12 @@ class GuidedMissile {
     this.speedUp();
     this.updateVector();
     this.angleCalibrate();
-    // console.log(Math.cos(this.angle * 180 / Math.PI), Math.sin(this.angle * 180 / Math.PI))
     this.position.x += this.speed * Math.cos(this.angle);
     this.position.y += this.speed * Math.sin(this.angle);
     
     c.save();
     c.translate(this.position.x, this.position.y);
     c.rotate(this.angle);
-    // c.rotate(this.angle *  Math.PI / 180);
     c.drawImage(this.sprite, -this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
     if(params.showCollision) {
       c.beginPath();
@@ -115,7 +113,6 @@ class GuidedMissile {
       c.fill();
     }
     c.restore();
-    // console.log('angle: ', this.angle);
   }
 
   update() {

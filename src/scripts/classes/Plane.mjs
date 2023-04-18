@@ -36,13 +36,13 @@ class Plane {
   }
   shoot() {
     missiles.push( 
-      new GuidedMissile({
-        x: this.position.x, y: this.position.y, width: 25, height: 40,
-        speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
-      })
-      // new DefaultMissile({x: this.position.x, y:this.position.y, width: 30, height: 15,
-      //   angle: this.rotation.angle, speed: 3, ownerId: this.id}
-      // )
+      // new GuidedMissile({
+      //   x: this.position.x, y: this.position.y, width: 25, height: 40,
+      //   speed: 4, minSpeed: 1, angle: this.rotation.angle, ownerId: this.id
+      // })
+      new DefaultMissile({x: this.position.x, y:this.position.y, width: 30, height: 15,
+        angle: this.rotation.angle, speed: 3, ownerId: this.id}
+      )
     )
   }
   tracing() {
@@ -66,7 +66,6 @@ class Plane {
       c.arc(0, 0,this.collision.r, 0,  2 * Math.PI)
       c.fill();
     }
-    // c.fillRect(-this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
     c.restore();
   }
 
@@ -74,11 +73,8 @@ class Plane {
     this.rotation.angle += this.rotation.rotationSpeed / 100; 
     if(this.rotation.angle * 180 / Math.PI > 360) this.rotation.angle -= 2 * Math.PI; // clearing unnecessary content
     if(this.rotation.angle * 180 / Math.PI < -360) this.rotation.angle += 2 * Math.PI; // clearing unnecessary content
-    // if(this.rotation.angle < -360) this.rotation.angle += 360; // clearing unnecessary content
 
-    // this.position.x += -this.velocity.y * Math.sin(this.rotation.angle * Math.PI / 360);
     this.position.x += this.speed * Math.cos(this.rotation.angle);
-    // this.position.y += this.velocity.y * Math.cos(this.rotation.angle* Math.PI / 360);
     this.position.y += this.speed * Math.sin(this.rotation.angle);
     this.draw(c);
     this.tracing();

@@ -46,26 +46,22 @@ class Missile {
   }
   angleCalibrate() {
     this.vector = {x: this.velocity.x, y: this.velocity.y};
-    // console.log(this.vector)
     this.angle = Math.atan2(this.vector.y, this.vector.x);
   }
   
   draw(c, x, y) {
-    // this.velocity.y = this.amplitude * Math.sin(this.frequency * this.position.x + this.phase);
     this.velocity.y = this.amplitude * Math.sin(this.angle + this.phase);
     this.updateTarget(x, y);
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
     this.angleCalibrate(x, y);
-    // console.log(Math.cos(this.angle * 180 / Math.PI), Math.sin(this.angle * 180 / Math.PI))
     this.position.x += this.speed * Math.cos(this.angle);
     this.position.y += this.speed * Math.sin(this.angle);
     
     c.save();
     c.translate(this.position.x, this.position.y);
     c.rotate(this.angle);
-    // c.rotate(this.angle *  Math.PI / 180);
     c.drawImage(this.sprite, -this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
     if(params.showCollision) {
       c.beginPath();

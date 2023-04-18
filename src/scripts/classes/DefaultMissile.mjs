@@ -33,7 +33,7 @@ class DefaultMissile {
     this.ownerPhysics = false;
     this.smoking = {
       currentFrame: 0,
-      smoke: 1,
+      smoke: 0,
     }
     this.ownerId = ownerId;
   }
@@ -64,10 +64,8 @@ class DefaultMissile {
     c.save();
     c.translate(this.position.x, this.position.y);
     c.rotate(this.angle);
-    // c.rotate(this.angle *  Math.PI / 180);
     c.drawImage(this.sprite, -this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
     c.restore();
-    // console.log('angle: ', this.angle);
   }
 
   update() {
