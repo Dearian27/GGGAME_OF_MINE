@@ -37,6 +37,7 @@ export const missiles = [];
 export const smokes = [];
 export const bursts = [];
 export const planeBursts = [];
+export const planeBurstParticles = [];
 export const players = [
   new Plane({x: 1200, y: 500, width: 35, height: 35, angle: -90, keys: "WASD", id: 1, tColor: [121,159,203]}),
   new Plane({x: 250, y: 200, width: 35, height: 35, angle: 90, keys: "ARROWS", id: 2, tColor: [249,102,94]})
@@ -113,7 +114,14 @@ const checkCollision = () => {
     players.forEach((player, index2) => {
         if(missile.ownerPhysics || (!missile.ownerPhysics && missile.ownerId !== player.id) ) {
           if (circleIntersect(player.position.x, player.position.y, player.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
-            //plane burst
+            //*plane burst
+            const details = planeBurst();
+            const pBurst = [];
+            details.forEach(el => {
+              pBurst.push(new PlanePart({x: player.position.x, y: player.position.y, width: el.width, height: el.height, img: el.img, time: 4}));
+            })
+            planeBursts.push(pBurst);
+            //*
             players.splice(index2, 1);
             //missile burst
             missiles.splice(index1, 1);
@@ -121,7 +129,7 @@ const checkCollision = () => {
             let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
             for(let i = 0; i < particleCount; i++) {
               burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
-              centerY: missile.position.y + missile.size.height/2, radius: 4}));
+              centerY: missile.position.y + missile.size.height/2, type: "missile"}));
             }
             bursts.push(burst);
           }
@@ -132,7 +140,15 @@ const checkCollision = () => {
   walls.forEach((wall, indexW) => { //! wall with Player
     players.forEach((player, index2) => {
       if (circleRectIntersect(player.position.x, player.position.y, player.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
-      //plane burst
+      //*plane burst
+      const details = planeBurst();
+      const pBurst = [];
+      details.forEach(el => {
+        pBurst.push(new PlanePart({x: player.position.x, y: player.position.y,
+          width: el.width, height: el.height, img: el.img, time: 4}));
+      })
+      planeBursts.push(pBurst);
+      //*
       players.splice(index2, 1);
       }
     })
@@ -143,10 +159,9 @@ const checkCollision = () => {
           let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
           for(let i = 0; i < particleCount; i++) {
             burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
-            centerY: missile.position.y + missile.size.height/2, radius: 4}));
+            centerY: missile.position.y + missile.size.height/2, type: "missile"}));
           }
           bursts.push(burst);
-          console.log("burst");
         }
     })
   })
@@ -168,25 +183,24 @@ const Timer = setInterval(() => {
         missile.ownerPhysics = true;
       }
   })
-  planeBursts.forEach((obj, index) => {
-    obj.time--;
-    if(obj.time <= 0) {
-      planeBursts.splice(index, 1);
+  planeBursts.forEach((bursts, index1) => {
+    if(bursts.length === 0) {
+      planeBursts.splice(index1, 1);
     }
-    console.log(obj);
+    bursts.forEach((burst, index2) => {
+      burst.time--;
+      if(burst.time <= 0) {
+        bursts.splice(index2, 1);
+      }
+    })
   });
-}, 1000);
-
-// const b = new Booster({x: 800, y: 400, type: 'gm'});
-  // const p1 = new PlanePart({x: 500, y: 300, width: 8, height: 20, img: Lat3});
-  // const p2 = new PlanePart({x: 600, y: 400, width: 8, height: 18, img: backLat1});
-
-  const details = planeBurst();
-  const burst = [];
-  details.forEach(el => {
-    burst.push(new PlanePart({x: 400, y: 300, width: el.width, height: el.height, img: el.img}));
+  planeBurstParticles.forEach((particle, index) => {
+    particle.time--;
+    if(particle.time <= 0) {
+      planeBurstParticles.splice(index, 1);
+    }
   })
-  planeBursts.push({burst, time: 4});
+}, 1000);
 
 const animate = () => {
   requestAnimationFrame(animate);
@@ -195,24 +209,24 @@ const animate = () => {
   c.fillRect(0, 0, canvas.width, canvas.height);
   checkCollision();
 
-  // b.draw();
-  
-  // currentMap.forEach((map) => {
-  //   map.draw();
-  // })
   traces.forEach(collection => 
     collection.forEach(trace => {
       trace.update(c)
     })
   )
 
-  // p1.update();
-  // p2.update();
-  planeBursts.forEach(({burst}) => {
+  //* Plane burst parts
+  planeBurstParticles.forEach(particle => {
+    particle.update();
+  })
+  planeBursts.forEach((burst) => {
     burst.forEach(part => {
+      planeBurstParticles.push(new BurstParticle({centerX: part.position.x + part.size.width/2, 
+      centerY: part.position.y + part.size.height/2, type: "plane", time: part.time}))
       part.update();
     })
   })
+  //* -----------------
 
   bursts.forEach((burst, index1) => {
     if(bursts.length === 0) bursts.splice(index1, 1);

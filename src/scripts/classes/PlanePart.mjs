@@ -1,7 +1,7 @@
 import {c} from "../../main";
 
 class PlanePart {
-  constructor({x, y, width, height, img}) {
+  constructor({x, y, width, height, img, time}) {
     this.position = {
       x,
       y
@@ -17,6 +17,7 @@ class PlanePart {
     this.staticAngle = Math.round(Math.random() * 360);
     this.angle = this.staticAngle;
     this.rotateSpeed = Math.round(Math.random() * 4 - 2);
+    this.time = time;
   }
   
   update() {

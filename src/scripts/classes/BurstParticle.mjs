@@ -1,23 +1,38 @@
 import {c} from '../../main.js';
 
 class BurstParticle {
-  constructor({centerX, centerY}) {
+  constructor({centerX, centerY, type, time}) {
     this.position = {
       centerX: centerX,
       centerY: centerY,
     }
-    this.speed = Math.floor(Math.random() * 20)/10;
-    this.angle = Math.round(Math.random() * 360);
-    this.color = Math.round(Math.random() * 20 + 30);
+    this.type = type;
+    if(type === "missile") {
+      this.speed = Math.floor(Math.random() * 20)/10;
+      this.angle = Math.round(Math.random() * 360);
+      this.color = Math.round(Math.random() * 20 + 30);
+      this.radius =  Math.round(Math.random() * 50)/10;
+    } else if(type === "plane") {
+      this.speed = Math.floor(Math.random() * 2)/10 + 0.1;
+      this.angle = Math.round(Math.random() * 360);
+      this.color = Math.round(Math.random() * 20 + 30);
+      this.radius =  Math.round(Math.random() * 20)/10;
+      this.time = time;
+    }
     // this.color = 220;
     this.currentColor = "#ffffff00";
-    this.radius =  Math.round(Math.random() * 50)/10;
     this.opacity = 1;
   }
 
   update() {
-    // this.opacity = (this.opacity * 80 - 1) / 80;  // opacity - 0.1;
-    if(this.speed > 0.2) {
+    if(this.type === "plane" && this.opacity > 0.01) {
+      this.color+= 0.5;
+      this.opacity = (this.opacity * 40 - 1) / 40;  // opacity - 0.1;
+      if(this.speed > 0) {
+        this.speed = (this.speed * 500 - 1) / 500; 
+      }
+    } 
+    if(this.type === "missile" && this.speed > 0.2) {
       this.speed = (this.speed * 40 - 1) / 40; 
       // this.color++;
     }
