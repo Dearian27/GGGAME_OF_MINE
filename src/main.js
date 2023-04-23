@@ -74,6 +74,15 @@ function btn(rect, text) {
   c.fillStyle = '#000000';
   c.fillText(text, rect.x + rect.width / 4, rect.y + 64);
 }
+const createBurst = ({subject, type, r, color}) => {
+  let burst = [];
+  let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
+  for(let i = 0; i < particleCount; i++) {
+    burst.push(new BurstParticle({centerX: subject.position.x + subject.size.width/2, 
+    centerY: subject.position.y + subject.size.height/2, type, r, color}));
+  }
+  bursts.push(burst);
+}
 const circleIntersect = (x1, y1, r1, x2, y2, r2) => {
   // Calculate the distance between the two circles
   let squareDistance = (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2);
@@ -115,6 +124,7 @@ const checkCollision = () => {
         if(missile.ownerPhysics || (!missile.ownerPhysics && missile.ownerId !== player.id) ) {
           if (circleIntersect(player.position.x, player.position.y, player.collision.r, missile.position.x, missile.position.y, missile.collision.r)){
             //*plane burst
+            createBurst({subject: player, type: "default", r: 2});
             const details = planeBurst();
             const pBurst = [];
             details.forEach(el => {
@@ -125,13 +135,7 @@ const checkCollision = () => {
             players.splice(index2, 1);
             //missile burst
             missiles.splice(index1, 1);
-            let burst = [];
-            let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
-            for(let i = 0; i < particleCount; i++) {
-              burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
-              centerY: missile.position.y + missile.size.height/2, type: "missile"}));
-            }
-            bursts.push(burst);
+            createBurst({subject: missile, type: "default"});
           }
         }
       })
@@ -141,6 +145,7 @@ const checkCollision = () => {
     players.forEach((player, index2) => {
       if (circleRectIntersect(player.position.x, player.position.y, player.collision.r, wall.position.x, wall.position.y, wall.size.width, wall.size.height)){
       //*plane burst
+      createBurst({subject: player, type: "default", r: 2});
       const details = planeBurst();
       const pBurst = [];
       details.forEach(el => {
@@ -159,7 +164,7 @@ const checkCollision = () => {
           let particleCount = params.graphic === "high" ? 450 : params.graphic === "low" && 200;
           for(let i = 0; i < particleCount; i++) {
             burst.push(new BurstParticle({centerX: missile.position.x + missile.size.width/2, 
-            centerY: missile.position.y + missile.size.height/2, type: "missile"}));
+            centerY: missile.position.y + missile.size.height/2, type: "default"}));
           }
           bursts.push(burst);
         }
