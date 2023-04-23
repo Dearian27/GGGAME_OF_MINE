@@ -3,8 +3,13 @@ import {canvas} from './main.js'
 import {leftBtn, rightBtn} from './main.js'
 
 
-const player1 = players.find(player => player.keys === 'WASD')
-const player2 = players.find(player => player.keys === 'ARROWS')
+let player1 = players.find(player => player.keys === 'WASD')
+let player2 = players.find(player => player.keys === 'ARROWS')
+
+// export const initPlaters = () => {
+//   player1 = players.find(player => player.keys === 'WASD')
+//   player2 = players.find(player => player.keys === 'ARROWS')  
+// }
 
 window.addEventListener('keydown', (event) => {
   switch(event.code) {

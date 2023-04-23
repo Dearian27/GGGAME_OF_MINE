@@ -1,3 +1,4 @@
+// import { initPlaters } from './keyEvents';
 import Booster from './scripts/classes/Booster.mjs';
 import BurstParticle from './scripts/classes/BurstParticle.mjs';
 import GuidedMissile from './scripts/classes/GuidedMissile.mjs';
@@ -21,6 +22,7 @@ export const params = {
   deltaTime: 1,
   time: 0,
   graphic: 'high', // low/high
+  winner: null, // player id 
 }
 
 export const maps = [
@@ -31,24 +33,48 @@ export const maps = [
     new Wall({x: canvas.width/2 + 120, y: canvas.height - 230, width: 30, height: 200, color: 'white'}),
   ]
 ]
-export const currentMap = maps[0]
-export const traces = [];
-export const missiles = [];
-export const smokes = [];
-export const bursts = [];
-export const planeBursts = [];
-export const planeBurstParticles = [];
-export const players = [
+export let currentMap = maps[0]
+export let traces = [];
+export let missiles = [];
+export let smokes = [];
+export let bursts = [];
+export let planeBursts = [];
+export let planeBurstParticles = [];
+export let players = [
   new Plane({x: 1200, y: 500, width: 35, height: 35, angle: -90, keys: "WASD", id: 1, tColor: [121,159,203]}),
   new Plane({x: 250, y: 200, width: 35, height: 35, angle: 90, keys: "ARROWS", id: 2, tColor: [249,102,94]})
 ];
-export const walls = [
+export let walls = [
   ...currentMap,
   new Wall({x: 0, y: 0, width: canvas.width, height: 10, color: 'grey'}),
   new Wall({x: 0, y: canvas.height-10, width: canvas.width, height: 10, color: 'grey'}),
   new Wall({x: 0, y: 10, width: 10, height: canvas.height - 20, color: 'grey'}),
   new Wall({x: canvas.width-10, y: 10, width: 10, height: canvas.height-20, color: 'grey'}),
 ]
+
+export const init = () => {
+  currentMap = maps[0]
+  traces = [];
+  missiles = [];
+  smokes = [];
+  bursts = [];
+  planeBursts = [];
+  planeBurstParticles = [];
+  players = [
+    new Plane({x: 1200, y: 500, width: 35, height: 35, angle: -90, keys: "WASD", id: 1, tColor: [121,159,203]}),
+    new Plane({x: 250, y: 200, width: 35, height: 35, angle: 90, keys: "ARROWS", id: 2, tColor: [249,102,94]})
+  ];
+  walls = [
+    ...currentMap,
+    new Wall({x: 0, y: 0, width: canvas.width, height: 10, color: 'grey'}),
+    new Wall({x: 0, y: canvas.height-10, width: canvas.width, height: 10, color: 'grey'}),
+    new Wall({x: 0, y: 10, width: 10, height: canvas.height - 20, color: 'grey'}),
+    new Wall({x: canvas.width-10, y: 10, width: 10, height: canvas.height-20, color: 'grey'}),
+  ]
+
+  params.winner = null;
+  // initPlaters();
+}
 export const rightBtn = {
   x: 240,
   y: 500,
@@ -260,6 +286,16 @@ const animate = () => {
   walls.forEach(wall => 
     wall.draw()
   )
+
+  if(!params.winner && players.length <= 1) {
+    params.winner = players[0].id;
+    setTimeout(() => {
+      init();
+    }, 3000)
+  }
+  if(params.winner !== -1 && players.length === 0) {    
+      params.winner = -1;
+  }
 }
 animate()
 
